@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:spring1_ui/FirestoreOperstions.dart';
 import 'package:spring1_ui/Supervisor/DashBoard.dart';
 
 class SignupPage extends StatefulWidget {
@@ -13,16 +14,23 @@ class _SignupPageState extends State<SignupPage> {
   TextEditingController _emailField = TextEditingController();
   TextEditingController _passwordField = TextEditingController();
   TextEditingController _fullName = TextEditingController();
+  TextEditingController _phoneNumber = TextEditingController();
+  TextEditingController _address = TextEditingController();
+  // late String _phoneNumber="125845";
 
-  Future<bool> register(String email, String password, String name) async {
+  late User cUser;
+  late String currentUserID;
+
+  Future<bool> register(
+      String email, String password, String name, String phone,String address) async {
     if (_formKey.currentState!.validate()) {
       try {
-        // await FirebaseAuth.instance
-        //     .createUserWithEmailAndPassword(email: email, password: password);
-        UserCredential result = await FirebaseAuth.instance
+        await FirebaseAuth.instance
             .createUserWithEmailAndPassword(email: email, password: password);
-        User user = result.user;
-        user.updateProfile(displayName: name);
+
+        cUser = FirebaseAuth.instance.currentUser;
+        currentUserID = cUser.uid;
+
         return true;
       } on FirebaseAuthException catch (e) {
         if (e.code == "weak-password") {
@@ -204,14 +212,58 @@ class _SignupPageState extends State<SignupPage> {
                           _emailField = password as TextEditingController,
                       obscureText: true,
                     ),
-                  ],
+                    SizedBox(
+                      height: 10,
+                    ),
+                    TextFormField(
+                      controller: _phoneNumber,
+                      validator: (phonenumber) {
+                        if (phonenumber!.isEmpty) {
+                          return "Enter phone number";
+                        }
+                      },
+                      decoration: InputDecoration(
+                          labelText: "Phone number",
+                          prefixIcon: Icon(Icons.phone),
+                          hintText: "01154785422",
+                          contentPadding:
+                              EdgeInsets.symmetric(vertical: 0, horizontal: 10),
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.grey),
+                          ),
+                          border: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.grey))),
+                      onSaved: (phonenumber) =>
+                          _phoneNumber = phonenumber as TextEditingController,
+                    ),
 
-                  // children: <Widget>[
-                  //   inputFile(label: "Username"),
-                  //   inputFile(label: "Email"),
-                  //   inputFile(label: "Password", obscureText: true),
-                  //   inputFile(label: "Confirm Password ", obscureText: true),
-                  // ],
+                     SizedBox(
+                      height: 10,
+                    ),
+
+
+                    TextFormField(
+                      controller: _address,
+                      validator: (address) {
+                        if (address!.isEmpty) {
+                          return "Enter Address";
+                        }
+                      },
+                      decoration: InputDecoration(
+                          labelText: "Address",
+                          prefixIcon: Icon(Icons.location_on_sharp),
+                          hintText: "Address",
+                          contentPadding:
+                              EdgeInsets.symmetric(vertical: 0, horizontal: 10),
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.grey),
+                          ),
+                          border: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.grey))),
+                      onSaved: (address) =>
+                          _address = address as TextEditingController,
+                    ),
+                  ],
                 ),
               ),
               Container(
@@ -228,9 +280,12 @@ class _SignupPageState extends State<SignupPage> {
                   minWidth: double.infinity,
                   height: 60,
                   onPressed: () async {
-                    bool shouldNavigate = await register(
-                        _emailField.text, _passwordField.text, _fullName.text);
+                    bool shouldNavigate = await register(_emailField.text,
+                        _passwordField.text, _fullName.text, _phoneNumber.text,_address.text);
                     if (shouldNavigate) {
+                      CreateUserInFirestore(_fullName.text, _emailField.text,
+                          currentUserID, _phoneNumber.text,_address.text); //create a new user
+
                       Navigator.push(context,
                           MaterialPageRoute(builder: (context) => Dashboard()));
                     }

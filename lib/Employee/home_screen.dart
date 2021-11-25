@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -8,7 +10,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-
+String uid = FirebaseAuth.instance.currentUser.uid;
 
   @override
   Widget build(BuildContext context) {
@@ -18,46 +20,63 @@ class _HomeScreenState extends State<HomeScreen> {
         backgroundColor: Colors.purple,
         
       ),
-      body: Container(
+      body:
+      Container(
         child: Column(
           children: [
             Container(
-              padding: EdgeInsets.only(left: 45),
               height: 300,
-              child: Image(
-                image: AssetImage("images/profile.jpg"),
-              ),
+                child: Image(image: AssetImage("images/profile.jpg")),
             ),
             Container(
-                padding: EdgeInsets.only(left: 45),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    RichText(
-                      text: TextSpan(children: <TextSpan>[
-                        TextSpan(
-                          text: "Hi Mr.Anwar\n",
-                          style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.lightGreen),
-                        )
-                      ]),
+              child: StreamBuilder(
+                stream: FirebaseFirestore.instance
+                    .collection("UserData")
+                    .doc(uid)
+                    .collection("Biodata")
+                    .snapshots(),
+                builder: (BuildContext context,
+                    AsyncSnapshot<QuerySnapshot> snapshot) {
+                  if (!snapshot.hasData) {
+                    return Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+
+                  return Container(
+                    child: Column(
+                      children:
+                          snapshot.data!.docs.map((DocumentSnapshot document) {
+                        return Container(                 
+                          child: Center(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                SizedBox(
+                                  height: 30,
+                                ),
+                                Container(
+                                  child: Text("Welcome ${ document.data()["Fullname"]}",
+                                    style:  TextStyle(color: Colors.green[700],fontWeight: FontWeight.bold,fontSize: 20),
+                                  ),
+                                ),
+
+                                 SizedBox(
+                                  height: 30,
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      }).toList(),
                     ),
-                    Text("History",
-                        style: TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
-                        ))
-                  ],
-                )),
-            SizedBox(
-              height: 10,
-            ),
+                  );
+                },
+              ),
+            )
           ],
         ),
-      ),
+      ), 
     );
   }
 }

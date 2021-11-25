@@ -10,13 +10,12 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
-
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-    TextEditingController _emailField = TextEditingController();
-    TextEditingController _passwordField = TextEditingController();
+  TextEditingController _emailField = TextEditingController();
+  TextEditingController _passwordField = TextEditingController();
 
-   Future<bool> signIn(String email, String password) async {
+  Future<bool> signIn(String email, String password) async {
     if (_formKey.currentState!.validate()) {
       try {
         await FirebaseAuth.instance
@@ -30,7 +29,6 @@ class _LoginState extends State<Login> {
     }
     return false;
   }
-
 
   void showError(String errormessage) {
     showDialog(
@@ -50,8 +48,6 @@ class _LoginState extends State<Login> {
         });
   }
 
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -64,51 +60,51 @@ class _LoginState extends State<Login> {
                 child: Image(image: AssetImage("images/login.jpg")),
               ),
               Container(
-                  width: MediaQuery.of(context).size.width / 1.3,
+                width: MediaQuery.of(context).size.width / 1.3,
                 child: Form(
-                  key: _formKey,
+                    key: _formKey,
                     child: Column(
-                  children: [
-                    Container(
-                      child: TextFormField(
-                         controller: _emailField,
-                        validator: (Email_input) {
-                          if (Email_input!.isEmpty) {
-                            return "Enter Email Correctly";
-                          }
-                        },
-                        decoration: InputDecoration(
-                          labelText: "Email",
-                          prefixIcon: Icon(Icons.email_outlined),
-                          hintText: "abc123@email.com",
-                        ),
-                        onSaved: (email) =>
-                          _emailField = email as TextEditingController,
-                      ),
-                    ),
-                    SizedBox(
-                      height: 30,
-                    ),
-                    Container(
-                      child: TextFormField(
-                        controller: _passwordField,
-                        validator: (password_input) {
-                          if (password_input!.length < 6) {
-                            return "Enter minimum 6 characters";
-                          }
-                        },
-                        decoration: InputDecoration(
-                            labelText: "Password",
-                            prefixIcon: Icon(Icons.lock_outline_rounded),
-                             hintText: "password123",
+                      children: [
+                        Container(
+                          child: TextFormField(
+                            controller: _emailField,
+                            validator: (Email_input) {
+                              if (Email_input!.isEmpty) {
+                                return "Enter Email Correctly";
+                              }
+                            },
+                            decoration: InputDecoration(
+                              labelText: "Email",
+                              prefixIcon: Icon(Icons.email_outlined),
+                              hintText: "abc123@email.com",
                             ),
-                             onSaved: (password) =>
-                          _passwordField = password as TextEditingController,
-                        obscureText: true,
-                      ),
-                    )
-                  ],
-                )),
+                            onSaved: (email) =>
+                                _emailField = email as TextEditingController,
+                          ),
+                        ),
+                        SizedBox(
+                          height: 30,
+                        ),
+                        Container(
+                          child: TextFormField(
+                            controller: _passwordField,
+                            validator: (password_input) {
+                              if (password_input!.length < 6) {
+                                return "Enter minimum 6 characters";
+                              }
+                            },
+                            decoration: InputDecoration(
+                              labelText: "Password",
+                              prefixIcon: Icon(Icons.lock_outline_rounded),
+                              hintText: "password123",
+                            ),
+                            onSaved: (password) => _passwordField =
+                                password as TextEditingController,
+                            obscureText: true,
+                          ),
+                        )
+                      ],
+                    )),
               ),
               SizedBox(
                 height: 30,
@@ -123,22 +119,24 @@ class _LoginState extends State<Login> {
                         padding: EdgeInsets.fromLTRB(70, 10, 70, 10),
                       ),
                       child: Text(
-                        
-                        "LOGIN",strutStyle: StrutStyle(fontWeight: FontWeight.bold,),style: TextStyle(color: Colors.greenAccent[700]),
+                        "LOGIN",
+                        strutStyle: StrutStyle(
+                          fontWeight: FontWeight.bold,
+                        ),
+                        style: TextStyle(color: Colors.greenAccent[700]),
                         // style: GoogleFonts.getFont("Lato",
                         //     fontWeight: FontWeight.bold,
                         //     color: Colors.greenAccent[700]),
                       ),
-                      onPressed: () async{
-
+                      onPressed: () async {
                         bool shouldNavigate =
-                          await signIn(_emailField.text, _passwordField.text);
-                      if (shouldNavigate) {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => HomePage()));
-                      }
+                            await signIn(_emailField.text, _passwordField.text);
+                        if (shouldNavigate) {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => HomePage()));
+                        }
                         // Navigator.push(
                         //     context,
                         //     MaterialPageRoute(

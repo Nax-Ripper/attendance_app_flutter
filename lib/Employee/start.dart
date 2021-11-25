@@ -40,7 +40,9 @@ class _startState extends State<start> {
             SizedBox(
               height: 10,
             ),
-            Text("\n",),
+            Text(
+              "\n",
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -55,8 +57,11 @@ class _startState extends State<start> {
                     ),
                     child: Text(
                       "LOGIN",
-                      strutStyle: StrutStyle(fontWeight: FontWeight.bold,),style: TextStyle(color: Colors.greenAccent[700]),
-                     // style: 
+                      strutStyle: StrutStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
+                      style: TextStyle(color: Colors.greenAccent[700]),
+                      // style:
                       // GoogleFonts.getFont("Lato",
                       //     fontWeight: FontWeight.bold,
                       //     color: Colors.greenAccent[700]),
