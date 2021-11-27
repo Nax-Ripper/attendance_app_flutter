@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:spring1_ui/Employee/updateUserProfile.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
@@ -14,6 +15,16 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
+    void _showUpdatePannel() {
+      showModalBottomSheet(
+          context: context,
+          builder: (context) {
+            return Container(
+                padding: EdgeInsets.symmetric(vertical: 20, horizontal: 60),
+                child: UpdateUserProfle());
+          });
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: Text("Personal Information"),
@@ -41,7 +52,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     child: Column(
                       children:
                           snapshot.data!.docs.map((DocumentSnapshot document) {
-                        return Container(                 
+                        return Container(
                           child: Center(
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -50,102 +61,102 @@ class _ProfilePageState extends State<ProfilePage> {
                                   height: 50,
                                 ),
                                 Container(
-                                  child: Text("${ document.data()["Fullname"]}",
-                                    style:  TextStyle(color: Colors.black,fontWeight: FontWeight.bold,fontSize: 20),
+                                  child: Text(
+                                    "${document.data()["Fullname"]}",
+                                    style: TextStyle(
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 20),
                                   ),
                                 ),
-
-                                 SizedBox(
+                                SizedBox(
                                   height: 30,
                                 ),
-
                                 Card(
-                                
                                   shadowColor: Colors.amber[600],
                                   elevation: 8.5,
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(25),
                                   ),
-                  
                                   child: Container(
                                     padding: EdgeInsets.all(16),
                                     child: Row(
                                       children: [
                                         Icon(Icons.email_outlined),
-                                        SizedBox(width: 45,),
-                                        Text(document.data()["email"],style: TextStyle(
-                                          fontSize: 15
-                                        ),)
-
+                                        SizedBox(
+                                          width: 45,
+                                        ),
+                                        Text(
+                                          document.data()["email"],
+                                          style: TextStyle(fontSize: 15),
+                                        )
                                       ],
                                     ),
                                   ),
                                 ),
-
-
                                 Card(
-                                  shadowColor: Colors.amber[600],
-                                  elevation: 8.5,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(25),
-                                  ),
-                  
-                                  child: Container(
-                                    padding: EdgeInsets.all(16),
-                                    child: Row(
-                                      children: [
-                                        Icon(Icons.location_on),
-                                        SizedBox(width: 45,),
-                                        Text(document.data()["address"],style: TextStyle(
-                                          fontSize: 15
-                                        ),),
-
-                                      ],
-                                    ),)
+                                    shadowColor: Colors.amber[600],
+                                    elevation: 8.5,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(25),
                                     ),
+                                    child: Container(
+                                      padding: EdgeInsets.all(16),
+                                      child: Row(
+                                        children: [
+                                          Icon(Icons.location_on),
+                                          SizedBox(
+                                            width: 45,
+                                          ),
+                                          Text(
+                                            document.data()["address"],
+                                            style: TextStyle(fontSize: 15),
+                                          ),
+                                        ],
+                                      ),
+                                    )),
                                 Card(
-                                  shadowColor: Colors.amber[600],
-                                  elevation: 8.5,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(25),
-                                  ),
-                  
-                                  child: Container(
-                                    padding: EdgeInsets.all(16),
-                                    child: Row(
-                                      children: [
-                                        Icon(Icons.phone),
-                                        SizedBox(width: 45,),
-                                        Text(document.data()["phone"],style: TextStyle(
-                                          fontSize: 15
-                                        ),),
-
-                                      ],
-                                    ),)
-                                ),
+                                    shadowColor: Colors.amber[600],
+                                    elevation: 8.5,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(25),
+                                    ),
+                                    child: Container(
+                                      padding: EdgeInsets.all(16),
+                                      child: Row(
+                                        children: [
+                                          Icon(Icons.phone),
+                                          SizedBox(
+                                            width: 45,
+                                          ),
+                                          Text(
+                                            document.data()["phone"],
+                                            style: TextStyle(fontSize: 15),
+                                          ),
+                                        ],
+                                      ),
+                                    )),
                                 Card(
-                                  shadowColor: Colors.amber[600],
-                                  elevation: 8.5,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(25),
-                                  ),
-                  
-                                  child: Container(
-                                    padding: EdgeInsets.all(16),
-                                    child: Row(
-                                      children: [
-                                        Icon(Icons.person_outline_outlined),
-                                        SizedBox(width: 45,),
-                                        Text(document.data()["role"],style: TextStyle(
-                                          fontSize: 15
-                                        ),),
-
-                                      ],
-                                    ),)
-                                ),
-
-
-                                
+                                    shadowColor: Colors.amber[600],
+                                    elevation: 8.5,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(25),
+                                    ),
+                                    child: Container(
+                                      padding: EdgeInsets.all(16),
+                                      child: Row(
+                                        children: [
+                                          Icon(Icons.person_outline_outlined),
+                                          SizedBox(
+                                            width: 45,
+                                          ),
+                                          Text(
+                                            document.data()["role"],
+                                            style: TextStyle(fontSize: 15),
+                                          ),
+                                        ],
+                                      ),
+                                    )),
                               ],
                             ),
                           ),
@@ -155,7 +166,14 @@ class _ProfilePageState extends State<ProfilePage> {
                   );
                 },
               ),
-            )
+            ),
+            SizedBox(height: 20,),
+            Container(
+              child: ElevatedButton( 
+                child: Text("Update"),
+                onPressed: ()=> _showUpdatePannel()),
+                ),
+            
           ],
         ),
       ),
