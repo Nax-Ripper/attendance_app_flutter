@@ -31,10 +31,7 @@ String uid = FirebaseAuth.instance.currentUser.uid;
             Container(
               child: StreamBuilder(
                 stream: FirebaseFirestore.instance
-                    .collection("UserData")
-                    .doc(uid)
-                    .collection("Biodata")
-                    .snapshots(),
+                    .collection("Employee").where("uid",isEqualTo: uid).snapshots(),
                 builder: (BuildContext context,
                     AsyncSnapshot<QuerySnapshot> snapshot) {
                   if (!snapshot.hasData) {

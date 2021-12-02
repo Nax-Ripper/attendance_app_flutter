@@ -1,16 +1,16 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:spring1_ui/Employee/updateUserProfile.dart';
+import 'package:spring1_ui/Supervisor/editprofile.dart';
 
-class ProfilePage extends StatefulWidget {
-  const ProfilePage({Key? key}) : super(key: key);
+class Profile extends StatefulWidget {
+  const Profile({Key? key}) : super(key: key);
 
   @override
-  State<ProfilePage> createState() => _ProfilePageState();
+  State<Profile> createState() => _ProfileState();
 }
 
-class _ProfilePageState extends State<ProfilePage> {
+class _ProfileState extends State<Profile> {
   String uid = FirebaseAuth.instance.currentUser.uid;
 
   @override
@@ -21,7 +21,7 @@ class _ProfilePageState extends State<ProfilePage> {
           builder: (context) {
             return Container(
                 padding: EdgeInsets.symmetric(vertical: 20, horizontal: 60),
-                child: UpdateUserProfle());
+                child: Editprofile());
           });
     }
 
@@ -36,7 +36,9 @@ class _ProfilePageState extends State<ProfilePage> {
             Container(
               child: StreamBuilder(
                 stream: FirebaseFirestore.instance
-                    .collection("Employee").where("uid",isEqualTo: uid).snapshots(),
+                    .collection("Supervisor")
+                    .where("uid", isEqualTo: uid)
+                    .snapshots(),
                 builder: (BuildContext context,
                     AsyncSnapshot<QuerySnapshot> snapshot) {
                   if (!snapshot.hasData) {
@@ -143,7 +145,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                       padding: EdgeInsets.all(16),
                                       child: Row(
                                         children: [
-                                          Icon(Icons.person_outline_outlined),
+                                          Icon(Icons.person),
                                           SizedBox(
                                             width: 45,
                                           ),
@@ -164,13 +166,13 @@ class _ProfilePageState extends State<ProfilePage> {
                 },
               ),
             ),
-            SizedBox(height: 20,),
+            SizedBox(
+              height: 20,
+            ),
             Container(
-              child: ElevatedButton( 
-                child: Text("Update"),
-                onPressed: ()=> _showUpdatePannel()),
-                ),
-            
+              child: ElevatedButton(
+                  child: Text("Update"), onPressed: () => _showUpdatePannel()),
+            ),
           ],
         ),
       ),

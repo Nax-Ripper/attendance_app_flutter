@@ -4,18 +4,20 @@ import 'package:flutter/material.dart';
 
 import '../FirestoreOperstions.dart';
 
-class UpdateUserProfle extends StatefulWidget {
-  const UpdateUserProfle({Key? key}) : super(key: key);
+class Editprofile extends StatefulWidget {
+  const Editprofile({Key? key}) : super(key: key);
 
   @override
-  _UpdateUserProfleState createState() => _UpdateUserProfleState();
+  _EditprofileState createState() => _EditprofileState();
 }
 
-class _UpdateUserProfleState extends State<UpdateUserProfle> {
+class _EditprofileState extends State<Editprofile> {
   String uid = FirebaseAuth.instance.currentUser.uid;
   GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
   late String _phoneNumber = "";
+  late String _location = "";
   var initialvalue = "0123456";
+  var initaialvalue2 = "hello";
 
   @override
   Widget build(BuildContext context) {
@@ -26,8 +28,9 @@ class _UpdateUserProfleState extends State<UpdateUserProfle> {
           children: [
             StreamBuilder(
               stream: FirebaseFirestore.instance
-                  .collection("Employee").where("uid",isEqualTo: uid).snapshots(),
-
+                  .collection("Supervisor")
+                  .where("uid", isEqualTo: uid)
+                  .snapshots(),
               builder: (BuildContext context,
                   AsyncSnapshot<QuerySnapshot> snapshot) {
                 if (!snapshot.hasData) {
@@ -82,18 +85,24 @@ class _UpdateUserProfleState extends State<UpdateUserProfle> {
                               SizedBox(
                                 height: 20,
                               ),
+
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   ElevatedButton(
                                       child: Text("Save"),
                                       onPressed: () async {
+                                        if (_location.isEmpty) {
+                                          _location =
+                                              _location + initaialvalue2;
+                                        }
+
                                         if (_phoneNumber.isEmpty) {
                                           _phoneNumber =
                                               initialvalue + _phoneNumber;
                                           Navigator.pop(context);
                                         } else {
-                                          updateEmployeeData(_phoneNumber, uid);
+                                          updateSupervisorData( _phoneNumber, uid,);
                                           Navigator.pop(context);
                                         }
                                       }),
