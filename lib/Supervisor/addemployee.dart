@@ -1,14 +1,15 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:spring1_ui/FirestoreOperstions.dart';
-import 'package:spring1_ui/Supervisor/DashBoard.dart';
 
-class SignupPage extends StatefulWidget {
+import '../FirestoreOperstions.dart';
+import 'DashBoard.dart';
+
+class AddEmployee extends StatefulWidget {
   @override
-  State<SignupPage> createState() => _SignupPageState();
+  State<AddEmployee> createState() => _AddEmployeeState();
 }
 
-class _SignupPageState extends State<SignupPage> {
+class _AddEmployeeState extends State<AddEmployee> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   TextEditingController _emailField = TextEditingController();
@@ -99,7 +100,7 @@ class _SignupPageState extends State<SignupPage> {
               Column(
                 children: <Widget>[
                   Text(
-                    "Sign up",
+                    "Add Employee",
                     style: TextStyle(
                       fontSize: 30,
                       fontWeight: FontWeight.bold,
@@ -283,7 +284,7 @@ class _SignupPageState extends State<SignupPage> {
                     bool shouldNavigate = await register(_emailField.text,
                         _passwordField.text, _fullName.text, _phoneNumber.text,_address.text);
                     if (shouldNavigate) {
-                      CreateSupervisorInFirestore(_fullName.text, _emailField.text,
+                      CreateEmployeeInFirestore(_fullName.text, _emailField.text,
                           currentUserID, _phoneNumber.text,_address.text); //create a new user
 
                       Navigator.push(context,
@@ -322,6 +323,3 @@ class _SignupPageState extends State<SignupPage> {
     );
   }
 }
-
-
-

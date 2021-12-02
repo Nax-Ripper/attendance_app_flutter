@@ -1,64 +1,122 @@
 import 'package:flutter/material.dart';
+import 'package:spring1_ui/Supervisor/addemployee.dart';
+import 'package:spring1_ui/Supervisor/info.dart';
+import 'package:spring1_ui/Supervisor/profile.dart';
+import 'package:spring1_ui/Supervisor/listofemployee.dart';
+import 'package:spring1_ui/WelcomeScr.dart';
 
-class Dashboard extends StatefulWidget {
-  @override
-  _DashboardState createState() => _DashboardState();
-}
-
-class _DashboardState extends State<Dashboard> {
-  @override
+class Dashboard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Main Menu"),
-        elevation: .1,
-        backgroundColor: Color.fromRGBO(49, 87, 110, 1.0),
+        title: Text("DashBoard"),
       ),
-      body: Container(
-        padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 2.0),
-        child: GridView.count(
-          crossAxisCount: 2,
-          padding: EdgeInsets.all(3.0),
-          children: <Widget>[
-            makeDashboardItem("Attendance", Icons.calendar_today),
-            makeDashboardItem("Profile", Icons.person),
-            makeDashboardItem("Logout", Icons.logout),
-            makeDashboardItem("Information", Icons.info)
-          ],
-        ),
-      ),
-    );
-  }
-
-  Card makeDashboardItem(String title, IconData icon) {
-    return Card(
-        elevation: 1.0,
-        margin: new EdgeInsets.all(8.0),
-        child: Container(
-          decoration: BoxDecoration(color: Color.fromRGBO(220, 220, 220, 1.0)),
-          child: new InkWell(
-            onTap: () {},
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              mainAxisSize: MainAxisSize.min,
-              verticalDirection: VerticalDirection.down,
-              children: <Widget>[
-                SizedBox(height: 50.0),
-                Center(
-                    child: Icon(
-                  icon,
-                  size: 40.0,
-                  color: Colors.black,
-                )),
-                SizedBox(height: 20.0),
-                new Center(
-                  child: new Text(title,
-                      style:
-                          new TextStyle(fontSize: 18.0, color: Colors.black)),
-                )
-              ],
-            ),
+      body: Center(
+          child: Column(
+        children: <Widget>[
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Padding(
+                  padding: EdgeInsets.all(20.0),
+                  child: new MaterialButton(
+                    elevation: 10,
+                    height: 100.0,
+                    minWidth: 150.0,
+                    color: Theme.of(context).primaryColor,
+                    textColor: Colors.white,
+                    child: new Text("Profile"),
+                    onPressed: () => {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => Profile()),
+                      )
+                    },
+                    splashColor: Colors.redAccent,
+                  )),
+              Padding(
+                  padding: EdgeInsets.all(20.0),
+                  child: new MaterialButton(
+                    elevation: 10,
+                    height: 100.0,
+                    minWidth: 150.0,
+                    color: Theme.of(context).primaryColor,
+                    textColor: Colors.white,
+                    child: new Text("Attendance"),
+                    onPressed: () => {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => Attendance()),
+                      )
+                    },
+                    splashColor: Colors.redAccent,
+                  )),
+            ],
           ),
-        ));
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Padding(
+                  padding: EdgeInsets.all(20.0),
+                  child: new MaterialButton(
+                    elevation: 10,
+                    height: 100.0,
+                    minWidth: 150.0,
+                    color: Theme.of(context).primaryColor,
+                    textColor: Colors.white,
+                    child: new Text("Logout"),
+                    onPressed: () => {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => HomePage()),
+                      )
+                    },
+                    splashColor: Colors.redAccent,
+                  )),
+              Padding(
+                  padding: EdgeInsets.all(20.0),
+                  child: new MaterialButton(
+                    elevation: 10,
+                    height: 100.0,
+                    minWidth: 150.0,
+                    color: Theme.of(context).primaryColor,
+                    textColor: Colors.white,
+                    child: new Text("About"),
+                    onPressed: () => {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => About()),
+                      )
+                    },
+                    splashColor: Colors.redAccent,
+                  )),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Padding(
+                  padding: EdgeInsets.all(20.0),
+                  child: new MaterialButton(
+                    
+                    elevation: 10,
+                    height: 100.0,
+                    minWidth: 150.0,
+                    color: Theme.of(context).primaryColor,
+                    textColor: Colors.white,
+                    child: new Text("Add Employee"),
+                    onPressed: () => {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => AddEmployee()),
+                      )
+                    },
+                    splashColor: Colors.redAccent,
+                  )),
+            ],
+          )
+        ],
+      )),
+    );
   }
 }
