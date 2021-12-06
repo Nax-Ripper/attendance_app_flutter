@@ -150,15 +150,6 @@ class _LoginPageState extends State<LoginPage> {
                       )),
                 ),
 
-                // Padding(
-                //   padding: EdgeInsets.symmetric(horizontal: 40),
-                //   child: Column(
-                //     // children: <Widget>[
-                //     //   inputFile(label: "Email"),
-                //     //   inputFile(label: "Password", obscureText: true)
-                //     // ],
-                //   ),
-                // ),
 
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 40),
@@ -179,16 +170,13 @@ class _LoginPageState extends State<LoginPage> {
                         bool shouldNavigate =
                             await signIn(_emailField.text, _passwordField.text);
                         if (shouldNavigate) {
+                          Navigator.pop(context);
+                          
                           Navigator.push(
                               context,
                               MaterialPageRoute(
                                   builder: (context) => Dashboard()));
                         }
-
-                        // Navigator.push(
-                        //     context,
-                        //     MaterialPageRoute(
-                        //         builder: (context) => Dashboard()));
                       },
                       color: Color(0xff0095FF),
                       elevation: 0,

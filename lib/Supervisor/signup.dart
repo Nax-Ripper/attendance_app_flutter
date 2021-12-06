@@ -21,8 +21,8 @@ class _SignupPageState extends State<SignupPage> {
   late User cUser;
   late String currentUserID;
 
-  Future<bool> register(
-      String email, String password, String name, String phone,String address) async {
+  Future<bool> register(String email, String password, String name,
+      String phone, String address) async {
     if (_formKey.currentState!.validate()) {
       try {
         await FirebaseAuth.instance
@@ -236,12 +236,9 @@ class _SignupPageState extends State<SignupPage> {
                       onSaved: (phonenumber) =>
                           _phoneNumber = phonenumber as TextEditingController,
                     ),
-
-                     SizedBox(
+                    SizedBox(
                       height: 10,
                     ),
-
-
                     TextFormField(
                       controller: _address,
                       validator: (address) {
@@ -280,11 +277,21 @@ class _SignupPageState extends State<SignupPage> {
                   minWidth: double.infinity,
                   height: 60,
                   onPressed: () async {
-                    bool shouldNavigate = await register(_emailField.text,
-                        _passwordField.text, _fullName.text, _phoneNumber.text,_address.text);
+                    bool shouldNavigate = await register(
+                        _emailField.text,
+                        _passwordField.text,
+                        _fullName.text,
+                        _phoneNumber.text,
+                        _address.text);
                     if (shouldNavigate) {
-                      CreateSupervisorInFirestore(_fullName.text, _emailField.text,
-                          currentUserID, _phoneNumber.text,_address.text); //create a new user
+                      CreateSupervisorInFirestore(
+                          _fullName.text,
+                          _emailField.text,
+                          currentUserID,
+                          _phoneNumber.text,
+                          _address.text); //create a new user
+
+                      Navigator.pop(context);
 
                       Navigator.push(context,
                           MaterialPageRoute(builder: (context) => Dashboard()));
@@ -322,6 +329,3 @@ class _SignupPageState extends State<SignupPage> {
     );
   }
 }
-
-
-

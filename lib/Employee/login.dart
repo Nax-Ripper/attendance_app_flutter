@@ -132,6 +132,8 @@ class _LoginState extends State<Login> {
                         bool shouldNavigate =
                             await signIn(_emailField.text, _passwordField.text);
                         if (shouldNavigate) {
+                          Navigator.pop(context);
+
                           Navigator.push(
                               context,
                               MaterialPageRoute(

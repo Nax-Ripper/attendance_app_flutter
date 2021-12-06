@@ -1,3 +1,6 @@
+
+
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:spring1_ui/Employee/attendance.dart';
 import 'package:spring1_ui/Employee/finance.dart';
@@ -15,6 +18,21 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   var currentPage = DrawerSections.home;
 
+   Future<void> _logout() async {
+    await FirebaseAuth.instance.signOut();
+    if (FirebaseAuth.instance.currentUser == null) {
+      Navigator.pop(context);
+      FirebaseAuth.instance.currentUser;
+      Navigator.push(context, MaterialPageRoute(builder: (context) => MyApp()));
+    } else {
+      AlertDialog(
+        title: Text("Logout again"),
+      );
+    }
+  }
+
+  
+
   @override
   Widget build(BuildContext context) {
     var container;
@@ -27,16 +45,20 @@ class _HomePageState extends State<HomePage> {
     } else if (currentPage == DrawerSections.attendance) {
       container = AttendanceHistory();
     } else if (currentPage == DrawerSections.logout) {
-      // container = start();
-      // Navigator.push(context, (MaterialPageRoute(builder:(context)=>start())));
-      WidgetsBinding.instance!.addPostFrameCallback((_) {
-        Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (_) => MyApp()));
-      });
+     
+      // Navigator.pop(context);
+        _logout();
+
+      // WidgetsBinding.instance!.addPostFrameCallback((_) {
+      //   Navigator.pushReplacement(
+      //       context, MaterialPageRoute(builder: (_) => MyApp()));
+      // });
+     
     }
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.purple,
+
       ),
       body: container,
       drawer: Drawer(
@@ -134,3 +156,5 @@ enum DrawerSections {
   attendance,
   logout,
 }
+
+
