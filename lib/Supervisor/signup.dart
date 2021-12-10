@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:spring1_ui/FirestoreOperstions.dart';
 import 'package:spring1_ui/Supervisor/DashBoard.dart';
 
+import 'verifyPage.dart';
+
 class SignupPage extends StatefulWidget {
   @override
   State<SignupPage> createState() => _SignupPageState();
@@ -294,7 +296,7 @@ class _SignupPageState extends State<SignupPage> {
                       Navigator.pop(context);
 
                       Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => Dashboard()));
+                          MaterialPageRoute(builder: (context) => verifyPage()));
                     }
                   },
                   color: Color(0xff0095FF),
