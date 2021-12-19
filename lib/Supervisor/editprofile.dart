@@ -54,7 +54,7 @@ class _EditprofileState extends State<Editprofile> {
                               SizedBox(
                                 height: 20,
                               ),
-                              TextFormField(
+                              TextFormField(  // input operations 
                                 initialValue: initialvalue =
                                     document.data()["phone"],
                                 validator: (value) {
@@ -92,17 +92,17 @@ class _EditprofileState extends State<Editprofile> {
                                   ElevatedButton(
                                       child: Text("Save"),
                                       onPressed: () async {
-                                        if (_location.isEmpty) {
-                                          _location =
-                                              _location + initaialvalue2;
-                                        }
+                                        // if (_location.isEmpty) {
+                                        //   _location =
+                                        //       _location + initaialvalue2;
+                                        // }
 
                                         if (_phoneNumber.isEmpty) {
                                           _phoneNumber =
                                               initialvalue + _phoneNumber;
                                           Navigator.pop(context);
                                         } else {
-                                          updateSupervisorData( _phoneNumber, uid,);
+                                          updateSupervisorData(_phoneNumber, uid,);  //calling update func
                                           Navigator.pop(context);
                                         }
                                       }),

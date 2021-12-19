@@ -29,28 +29,20 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Employee Profile"),
-        backgroundColor: Colors.purple,
-        // actions: [
-        //   FlatButton.icon(
-        //     icon: Icon(Icons.lock_open_sharp),
-        //     label: Text("Logout"),
-        //     onPressed: () {
-        //       Navigator.pop(context);
-        //       _logout();
-
-        //       WidgetsBinding.instance!.addPostFrameCallback((_) {
-        //         // Navigator.pushReplacement(
-        //         //     context, MaterialPageRoute(builder: (_) => MyApp()));
-        //       });
-        //     },
-        //   )
-        // ],
-      ),
+      // appBar: AppBar(
+      //   title: Text("Employee Profile"),
+      //   backgroundColor: Colors.purple,
+      // ),
       body: Container(
         child: Column(
           children: [
+
+            SizedBox(
+              height: 30,
+            ),
+
+            Text("Employee Profile",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 30),),
+
             Container(
               height: 300,
               child: Image(image: AssetImage("images/profile.jpg")),
@@ -93,6 +85,21 @@ class _HomeScreenState extends State<HomeScreen> {
                                 SizedBox(
                                   height: 30,
                                 ),
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(20, 8, 20, 8),
+                                  child: Container(
+                                    child: Card(
+                                      elevation: 10,
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: TodaysDate(
+                                            document.data()["check in"],
+                                            document.data()["check out"]),
+                                      ),
+                                    ),
+                                  ),
+                                )
                               ],
                             ),
                           ),
@@ -105,6 +112,84 @@ class _HomeScreenState extends State<HomeScreen> {
             )
           ],
         ),
+      ),
+    );
+  }
+}
+
+class TodaysDate extends StatefulWidget {
+  late String checkin, checkout;
+  late String Tdate, cInTime, cOutTime;
+
+  TodaysDate(this.checkin, this.checkout) {
+    Tdate = getTdate(checkin, checkout);
+  }
+
+  String getTdate(String checkin, String checkout) {
+    if (checkin == "today") {
+      cInTime = "today";
+      cOutTime = "today";
+      return "today";
+    } else {
+      var day = checkin.substring(0, 10);
+      var cintime = checkin.substring(11, 16);
+      var couttime = checkout.substring(11, 16);
+      cInTime = cintime;
+      cOutTime = couttime;
+      return day;
+    }
+  }
+
+  @override
+  _TodaysDateState createState() => _TodaysDateState();
+}
+
+class _TodaysDateState extends State<TodaysDate> {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
+                child: Container(
+                  padding: EdgeInsets.fromLTRB(0, 10, 10, 0),
+                  child: Text(widget.Tdate),
+                ),
+              ),
+            ],
+          ),
+          SizedBox(
+            width: 20,
+          ),
+          Container(
+              child: Container(
+            child: Column(
+              children: [
+                Row(
+                  children: [
+                    Text("Check In"),
+                    SizedBox(width: 10),
+                    Text(widget.cInTime)
+                  ],
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                Row(
+                  children: [
+                    Text("Check Out"),
+                    SizedBox(width: 10),
+                    Text(widget.cOutTime)
+                  ],
+                )
+              ],
+            ),
+          ))
+        ],
       ),
     );
   }

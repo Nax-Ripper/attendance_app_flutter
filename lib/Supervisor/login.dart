@@ -90,6 +90,8 @@ class _LoginPageState extends State<LoginPage> {
                   ],
                 ),
 
+                ///////////______________________________///////////////////
+
                 Container(
                   child: Form(
                       key: _formKey,
@@ -122,7 +124,7 @@ class _LoginPageState extends State<LoginPage> {
                             SizedBox(
                               height: 10,
                             ),
-                            TextFormField(
+                            TextFormField(  // input field 
                               validator: (password) {
                                 if (password!.length < 6) {
                                   return "Provide Minimum 6 Character";
@@ -168,7 +170,7 @@ class _LoginPageState extends State<LoginPage> {
                       height: 60,
                       onPressed: () async {
                         bool shouldNavigate =
-                            await signIn(_emailField.text, _passwordField.text);
+                            await signIn(_emailField.text, _passwordField.text); //-----> call sign in func 
                         if (shouldNavigate) {
                           Navigator.pop(context);
                           

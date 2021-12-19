@@ -166,7 +166,7 @@ class _SignupPageState extends State<SignupPage> {
                     SizedBox(
                       height: 10,
                     ),
-                    TextFormField(
+                    TextFormField(  //----------------------------> input field 
                       controller: _passwordField,
                       validator: (password_input) {
                         if (password_input!.length < 6) {
@@ -286,7 +286,7 @@ class _SignupPageState extends State<SignupPage> {
                         _phoneNumber.text,
                         _address.text);
                     if (shouldNavigate) {
-                      CreateSupervisorInFirestore(
+                      CreateSupervisorInFirestore( //-------------------------> call supervisor func 
                           _fullName.text,
                           _emailField.text,
                           currentUserID,

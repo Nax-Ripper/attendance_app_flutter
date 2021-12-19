@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -87,7 +89,7 @@ class _DetailPageState extends State<DetailPage> {
     if (!difference.isNegative) {
       var diff = difference.inSeconds.toString(); // for now set as seconds(demo purpose)
       print(diff);
-      var hours = int.parse(diff);
+      var hours = double.parse(diff);
       Total = hours * 10;
       print(Total);
       return Total;

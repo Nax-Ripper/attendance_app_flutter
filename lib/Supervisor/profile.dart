@@ -86,7 +86,7 @@ class _ProfileState extends State<Profile> {
                                           width: 45,
                                         ),
                                         Text(
-                                          document.data()["email"],
+                                          document.data()["email"], // display info form firestore 
                                           style: TextStyle(fontSize: 15),
                                         )
                                       ],

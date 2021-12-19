@@ -54,7 +54,7 @@ Future<bool> updateSupervisorData(String phone, String uid) async {
         FirebaseFirestore.instance.collection("Supervisor").doc(uid);
 
     FirebaseFirestore.instance.runTransaction((transaction) async {
-      DocumentSnapshot snapshot = await transaction.get(documentReference);
+      // DocumentSnapshot snapshot = await transaction.get(documentReference);
 
       transaction.update(documentReference, {
         "phone": phone,
@@ -68,7 +68,7 @@ Future<bool> updateSupervisorData(String phone, String uid) async {
 
 
 
-  Future<bool> updateEmployeeAmount(Amount,String uid) async {
+  Future<bool> updateEmployeeAmount(double Amount,String uid) async {
     try {
       // var value = double.parse(Amount);
       DocumentReference documentReference1 = FirebaseFirestore.instance
