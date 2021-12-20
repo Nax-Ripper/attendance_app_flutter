@@ -26,10 +26,10 @@ class _ProfilePageState extends State<ProfilePage> {
     }
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Personal Information"),
-        backgroundColor: Colors.purple,
-      ),
+      // appBar: AppBar(
+      //   title: Text("Personal Information"),
+      //   backgroundColor: Colors.purple,
+      // ),
       body: Container(
         child: Column(
           children: [
@@ -59,11 +59,11 @@ class _ProfilePageState extends State<ProfilePage> {
                                 ),
                                 Container(
                                   child: Text(
-                                    "${document.data()["Fullname"]}",
+                                    "${document.data()["Fullname"].toString().toUpperCase()}",
                                     style: TextStyle(
                                         color: Colors.black,
                                         fontWeight: FontWeight.bold,
-                                        fontSize: 20),
+                                        fontSize: 25),
                                   ),
                                 ),
                                 SizedBox(

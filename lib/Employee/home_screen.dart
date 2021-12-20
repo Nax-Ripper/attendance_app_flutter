@@ -156,8 +156,8 @@ class _TodaysDateState extends State<TodaysDate> {
               Padding(
                 padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
                 child: Container(
-                  padding: EdgeInsets.fromLTRB(0, 10, 10, 0),
-                  child: Text(widget.Tdate),
+                  padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
+                  child: Text(widget.Tdate,style: TextStyle(fontWeight: FontWeight.bold),),
                 ),
               ),
             ],
@@ -173,7 +173,7 @@ class _TodaysDateState extends State<TodaysDate> {
                   children: [
                     Text("Check In"),
                     SizedBox(width: 10),
-                    Text(widget.cInTime)
+                    Text(widget.cInTime,style: TextStyle(fontWeight: FontWeight.bold),)
                   ],
                 ),
                 SizedBox(
@@ -183,7 +183,7 @@ class _TodaysDateState extends State<TodaysDate> {
                   children: [
                     Text("Check Out"),
                     SizedBox(width: 10),
-                    Text(widget.cOutTime)
+                    Text(widget.cOutTime,style: TextStyle(fontWeight: FontWeight.bold),)
                   ],
                 )
               ],

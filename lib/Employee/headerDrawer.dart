@@ -33,15 +33,23 @@ class _MyHeaderDrawerState extends State<MyHeaderDrawer> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
+
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(0,0,190,3),
+                      child: greetings(),
+                    ),
                     Text(
                       document.data()["Fullname"],
-                      style: TextStyle(color: Colors.white, fontSize: 20),
+                      style: TextStyle(color: Colors.white, fontSize: 25),
+                    ),
+                    SizedBox(
+                      height: 9,
                     ),
                     Text(
                       document.data()["role"],
                       style: TextStyle(
                         color: Colors.grey[200],
-                        fontSize: 14,
+                        fontSize: 17,
                       ),
                     )
                   ],
@@ -53,4 +61,22 @@ class _MyHeaderDrawerState extends State<MyHeaderDrawer> {
       },
     ));
   }
+}
+
+Widget greetings()
+{
+  DateTime now = DateTime.now();
+  var hour = now.hour;
+  if(hour<12)
+  {
+    return Text(" Good Morning,",style: TextStyle(fontSize: 15),);
+  }
+  else if(hour==12)
+  {
+    return Text(" Good Afernoon,");
+  }
+  else
+  
+    return Text(" Good Evening,");
+  
 }

@@ -61,7 +61,7 @@ class _ProfileState extends State<Profile> {
                                 ),
                                 Container(
                                   child: Text(
-                                    "${document.data()["Fullname"]}",
+                                    "${document.data()["Fullname"].toString().toUpperCase()}",
                                     style: TextStyle(
                                         color: Colors.black,
                                         fontWeight: FontWeight.bold,

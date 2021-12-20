@@ -33,7 +33,7 @@ class AttendanceHistory extends StatelessWidget {
                       return Center(
                         child: Column(children: [
                           SizedBox(
-                            height: 20,
+                            height: 30,
                           ),
                           Text(
                             "My Attendance",
@@ -41,15 +41,20 @@ class AttendanceHistory extends StatelessWidget {
                                 fontSize: 25, fontWeight: FontWeight.bold),
                           ),
                           SizedBox(
-                            height: 10,
+                            height: 30,
                           ),
-                          DataTable(columns: [
-                            DataColumn(label: Text("Date")),
-                            DataColumn(label: Text("Check in")),
-                            DataColumn(label: Text("Check out")),
-                          ], rows: [
+                          DataTable(
+                           
+                            columns: [
+                            DataColumn(label: Text("Date",textAlign: TextAlign.center,style: TextStyle(fontSize: 20),)),
+                            DataColumn(label: Text("Check in",textAlign: TextAlign.center,style: TextStyle(fontSize: 20),)),
+                            DataColumn(label: Text("Check out",textAlign: TextAlign.center,style: TextStyle(fontSize: 20),)),
+                           
+                          ], 
+                          
+                          rows: [
                             DataRow(cells: [
-                              DataCell(Text("Today")),
+                              DataCell(Text("Today",style: TextStyle(fontSize: 17),)),
                               DataCell(formaDtate(
                                   document.data()["check in"].toString())),
                               DataCell(formaDtate(
@@ -74,8 +79,8 @@ Widget formaDtate(String time) {
   String hours;
   if (time !="today") {
     hours = time.substring(11, 16);
-    return Text(hours);
+    return Text("   "+hours,textAlign: TextAlign.center,style: TextStyle(fontSize: 17),);
   } else {
-    return Text("No record found");
+    return Text("No record",textAlign: TextAlign.center,);
   }
 }
