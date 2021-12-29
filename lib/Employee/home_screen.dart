@@ -47,6 +47,7 @@ class _HomeScreenState extends State<HomeScreen> {
               height: 300,
               child: Image(image: AssetImage("images/profile.jpg")),
             ),
+             
             Container(
               child: StreamBuilder(
                 stream: FirebaseFirestore.instance

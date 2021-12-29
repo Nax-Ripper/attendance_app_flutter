@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:spring1_ui/Supervisor/DashBoard.dart';
@@ -8,15 +9,51 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  String role = "role";
+
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   TextEditingController _emailField = TextEditingController();
   TextEditingController _passwordField = TextEditingController();
 
+  bool checkSupervisorValidate(value) {
+    print("This is " + value.toString());
+    role = value.toString();
+    try {
+      if (role == "Supervisor") {
+        return true;
+      } else {
+        throw Exception("You are not Supervisor");
+      }
+    } catch (Exception) {
+      showError(Exception.toString());
+      return false;
+    }
+  }
+
   Future<bool> signIn(String email, String password) async {
     if (_formKey.currentState!.validate()) {
       try {
-        await FirebaseAuth.instance
+        var usr = await FirebaseAuth.instance
             .signInWithEmailAndPassword(email: email, password: password);
+
+        var UID = usr.user.uid;
+        print(UID);
+        DocumentReference docu =
+            FirebaseFirestore.instance.collection("Supervisor").doc(UID);
+
+        String test = "test";
+
+        var hello = docu.get().then((value) {
+          if (value.exists) {
+            test = value.data()["role"];
+            return test;
+          }
+        });
+
+        var x = hello.then((value) => checkSupervisorValidate(value));
+
+        return x;
+
         return true;
       } catch (exception) {
         print(exception);
@@ -124,7 +161,8 @@ class _LoginPageState extends State<LoginPage> {
                             SizedBox(
                               height: 10,
                             ),
-                            TextFormField(  // input field 
+                            TextFormField(
+                              // input field
                               validator: (password) {
                                 if (password!.length < 6) {
                                   return "Provide Minimum 6 Character";
@@ -133,7 +171,7 @@ class _LoginPageState extends State<LoginPage> {
                               controller: _passwordField,
                               decoration: InputDecoration(
                                   labelText: "Password",
-                                  prefixIcon: Icon(Icons.email_outlined),
+                                  prefixIcon: Icon(Icons.lock_outline),
                                   hintText: "password",
                                   contentPadding: EdgeInsets.symmetric(
                                       vertical: 0, horizontal: 10),
@@ -152,7 +190,6 @@ class _LoginPageState extends State<LoginPage> {
                       )),
                 ),
 
-
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 40),
                   child: Container(
@@ -169,11 +206,11 @@ class _LoginPageState extends State<LoginPage> {
                       minWidth: double.infinity,
                       height: 60,
                       onPressed: () async {
-                        bool shouldNavigate =
-                            await signIn(_emailField.text, _passwordField.text); //-----> call sign in func 
+                        bool shouldNavigate = await signIn(_emailField.text,
+                            _passwordField.text); //-----> call sign in func
                         if (shouldNavigate) {
                           Navigator.pop(context);
-                          
+
                           Navigator.push(
                               context,
                               MaterialPageRoute(
@@ -218,33 +255,3 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 }
-
-// we will be creating a widget for text field
-// Widget inputFile({label, obscureText = false}) {
-//   return Column(
-//     crossAxisAlignment: CrossAxisAlignment.start,
-//     children: <Widget>[
-//       Text(
-//         label,
-//         style: TextStyle(
-//             fontSize: 15, fontWeight: FontWeight.w400, color: Colors.black87),
-//       ),
-//       SizedBox(
-//         height: 5,
-//       ),
-//       TextField(
-//         obscureText: obscureText,
-//         decoration: InputDecoration(
-//             contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 10),
-//             enabledBorder: OutlineInputBorder(
-//               borderSide: BorderSide(color: Colors.grey),
-//             ),
-//             border:
-//                 OutlineInputBorder(borderSide: BorderSide(color: Colors.grey))),
-//       ),
-//       SizedBox(
-//         height: 10,
-//       )
-//     ],
-//   );
-// }

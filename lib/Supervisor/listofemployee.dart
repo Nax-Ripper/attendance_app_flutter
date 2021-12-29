@@ -147,12 +147,13 @@ class _DetailPageState extends State<DetailPage> {
 
     checkoutButton() {
       try {
-        if ((checkin.difference(DateTime.now()).inSeconds)<=0) {
+        if ((checkin.difference(DateTime.now()).inSeconds) <= 0) {
           if (coutCount > 0) {
             checkout = _getCheckout();
             updateCheckout(checkout, uid);
             var money = _differenceInHours(checkin, checkout);
             updateEmployeeAmount(money, uid);
+            setAttendeceHistory(checkout, checkin, money, uid);
             coutCount--;
           } else {
             throw Exception("Cannot Checkout more then once!");

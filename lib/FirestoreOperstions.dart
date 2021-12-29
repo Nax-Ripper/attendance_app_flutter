@@ -138,4 +138,15 @@ Future<bool> updateSupervisorData(String phone, String uid) async {
     }
   }
 
-  
+
+   Future<void> setAttendeceHistory(DateTime cout, DateTime cin, money,String uid) async {
+    FirebaseFirestore.instance
+        .collection("Employee")
+        .doc(uid)
+        .collection("History")
+        .add({
+      "check in": cin.toString(),
+      "check out": cout.toString(),
+      "current amount": money,
+    });
+  }

@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:spring1_ui/Employee/home_screen_drawer.dart';
@@ -10,7 +11,24 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
+  String role = "role";
+
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+  bool checkEmployeeValidate(value) {
+    print("This is " + value.toString());
+    role = value.toString();
+    try {
+      if (role == "Employee") {
+        return true;
+      } else {
+        throw Exception("You are not Employee");
+      }
+    } catch (Exception) {
+      showError(Exception.toString());
+      return false;
+    }
+  }
 
   TextEditingController _emailField = TextEditingController();
   TextEditingController _passwordField = TextEditingController();
@@ -18,12 +36,28 @@ class _LoginState extends State<Login> {
   Future<bool> signIn(String email, String password) async {
     if (_formKey.currentState!.validate()) {
       try {
-        await FirebaseAuth.instance
+        var usr = await FirebaseAuth.instance
             .signInWithEmailAndPassword(email: email, password: password);
-        return true;
-      } catch (exception) {
-        print(exception);
-        showError(exception.toString());
+        var UID = usr.user.uid;
+        print(UID);
+        DocumentReference docu =
+            FirebaseFirestore.instance.collection("Employee").doc(UID);
+
+        String test = "test";
+
+        var hello = docu.get().then((value) {
+          if (value.exists) {
+            test = value.data()["role"];
+            return test;
+          }
+        });
+
+        var x = hello.then((value) => checkEmployeeValidate(value));
+
+        return x;
+      } catch (Exception) {
+        print(Exception);
+        showError(Exception.toString());
         return false;
       }
     }
