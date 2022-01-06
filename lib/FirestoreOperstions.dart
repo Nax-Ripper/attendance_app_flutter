@@ -12,6 +12,7 @@ void CreateEmployeeInFirestore(
     "check in": "today",
     "check out": "today",
     "Total Amount": 0.0,
+    "profile pic":""
   });
 }
 

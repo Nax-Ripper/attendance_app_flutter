@@ -1,9 +1,17 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:local_auth/local_auth.dart';
 
 import '../Employee/attendance.dart';
 import '../FirestoreOperstions.dart';
+import 'login.dart';
+// package:spring1_uSupervisor/login.dart
+import 'package:spring1_ui/Supervisor/login.dart';
 
 class Attendance extends StatefulWidget {
   @override
@@ -11,6 +19,59 @@ class Attendance extends StatefulWidget {
 }
 
 class _AttendanceState extends State<Attendance> {
+  bool _canSee = true;
+
+  late TextEditingController controller;
+  @override
+  void initState() {
+    super.initState();
+    controller = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+
+  Future getDialog(BuildContext context) {
+    TextEditingController mycontroller = TextEditingController();
+    var cansee = Icon(Icons.remove_red_eye);
+    // bool _canSee = false;
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text("Enter Your Password"),
+            content: TextField(
+              controller: mycontroller,
+              obscureText: true,
+              decoration: InputDecoration(
+                labelText: "Password",
+              ),
+            ),
+            actions: [
+              TextButton(
+                child: Text("Submit"),
+                onPressed: () {
+                  Navigator.of(context).pop(mycontroller.text.toString());
+                },
+              )
+            ],
+          );
+        });
+  }
+
+  checkpassword(real, enterd) {
+    if (real != enterd) {
+      print("Failed nooooooooooooooooooooooobbbbbbbbbbbbb");
+      return false;
+    } else {
+      print("Passsssss Nooooooooooooooooob");
+      return true;
+    }
+  }
+
   goToDetailPage(DocumentSnapshot data) {
     Navigator.push(
         context,
@@ -18,7 +79,55 @@ class _AttendanceState extends State<Attendance> {
             builder: (context) => DetailPage(selectedUser: data)));
   }
 
+  void showError(String errormessage) {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('ERROR'),
+            content: Text(errormessage),
+            actions: <Widget>[
+              ElevatedButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text('OK'))
+            ],
+          );
+        });
+  }
+
+  // Future<bool> getAuthorised() async {
+  //   final LocalAuthentication check = LocalAuthentication();
+  //   String _isauthoursed = "Not";
+  //   bool canCheckBiometrics = await check.canCheckBiometrics;
+  //   List<BiometricType> available = await check.getAvailableBiometrics();
+  //   print(canCheckBiometrics);
+  //   try {
+  //     if (Platform.isAndroid) {
+  //       if (available.contains(BiometricType.face)) {
+  //         await check.authenticateWithBiometrics(
+  //           localizedReason: "Confirm your deletion",
+  //         );
+  //         //call tempass dialog
+  //         print("Hello");
+  //       } else {
+  //         // getDialog(context);
+  //         print("hello form other formate");
+  //         return false;
+  //       }
+  //     }
+
+  //     return true;
+  //   } on PlatformException catch (e) {
+  //     showError(e.toString());
+  //     return false;
+  //   }
+  // }
+
   String uid = FirebaseAuth.instance.currentUser!.uid;
+
+  String collection = "Employee";
 
   @override
   Widget build(BuildContext context) {
@@ -38,12 +147,84 @@ class _AttendanceState extends State<Attendance> {
             return ListView.builder(
               itemCount: snapshot.data!.size,
               itemBuilder: (context, i) {
-                return Card(
-                  elevation: 8,
-                  child: ListTile(
-                    title: Text(list[i]["Fullname"]),
-                    subtitle: Text(list[i]["phone"]),
-                    onTap: () => goToDetailPage(list[i]),
+                return Slidable(
+                  key: const ValueKey(0),
+                  endActionPane: ActionPane(motion: ScrollMotion(),
+                      // dismissible: DismissiblePane(onDismissed: () {
+                      //   list[i].get("email");
+
+                      //   setState(() {
+                      //     collection = "Employee";
+                      //   });
+                      // }),
+                      children: [
+                        SlidableAction(
+                          onPressed: (context) {
+                            var snap = FirebaseFirestore.instance
+                                .collection("Supervisor")
+                                .doc(FirebaseAuth.instance.currentUser.uid);
+                            var snap2 = FirebaseFirestore.instance
+                                .collection("Employee")
+                                .doc(list[i].data()["uid"]);
+
+                            // Future<bool> isApproved = getAuthorised();
+                            // if (isApproved == true) {
+                            //   print("approved");
+                            // } else {
+                            //   print("Failed");
+                            // }
+                            getDialog(context).then((password) {
+                              snap.get().then((value) {
+                                // print("Hello theis is tempass " +
+                                //     tempass.toString());
+                                // print("Hello this is entered password " +
+                                //     password.toString());
+                                var tempass = value.data()["tempass"];
+
+                                if (tempass == null) {
+                                  showError("You are not allowed to delete");
+                                } else {
+                                  bool flag = checkpassword(
+                                      tempass.toString(), password.toString());
+
+                                  if (flag) {
+                                    try {
+                                      snap2.delete();
+                                      setState(() {
+                                        Scaffold.of(context).showSnackBar(
+                                            SnackBar(
+                                                content: Text("User Deleted Successfully")));
+                                      });
+                                    } catch (e) {}
+                                  } else {
+                                    showError("Operation Failed");
+                                  }
+                                }
+                              });
+                            });
+
+                            setState(() {
+                              collection = "Employee";
+                            });
+
+                            // print("hello");
+                            // var hello = snap.get().then((value) {
+                            //   print(value.data()["tempass"]);
+                            // });
+                          },
+                          backgroundColor: Color(0xFFFE4A49),
+                          foregroundColor: Colors.white,
+                          icon: Icons.delete,
+                          label: 'Delete',
+                        )
+                      ]),
+                  child: Card(
+                    elevation: 8,
+                    child: ListTile(
+                      title: Text(list[i]["Fullname"]),
+                      subtitle: Text(list[i]["phone"]),
+                      onTap: () => goToDetailPage(list[i]),
+                    ),
                   ),
                 );
               },
@@ -173,7 +354,7 @@ class _DetailPageState extends State<DetailPage> {
       ),
       body: Container(
         child: Center(
-          //
+          //--------------------------> //////
           child: StreamBuilder(
             stream: FirebaseFirestore.instance
                 .collection("Employee")

@@ -1,7 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:spring1_ui/Employee/updateUserProfile.dart';
+import 'package:path/path.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
@@ -12,9 +15,12 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   String uid = FirebaseAuth.instance.currentUser.uid;
+  var _image;
 
   @override
   Widget build(BuildContext context) {
+    
+
     void _showUpdatePannel() {
       showModalBottomSheet(
           context: context,
@@ -36,7 +42,9 @@ class _ProfilePageState extends State<ProfilePage> {
             Container(
               child: StreamBuilder(
                 stream: FirebaseFirestore.instance
-                    .collection("Employee").where("uid",isEqualTo: uid).snapshots(),
+                    .collection("Employee")
+                    .where("uid", isEqualTo: uid)
+                    .snapshots(),
                 builder: (BuildContext context,
                     AsyncSnapshot<QuerySnapshot> snapshot) {
                   if (!snapshot.hasData) {
@@ -54,8 +62,93 @@ class _ProfilePageState extends State<ProfilePage> {
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
+                                Container(
+                                  // height: 300,
+                                  // child: Image(image: AssetImage("images/profile.jpg")),
+                                  child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Padding(
+                                          padding: const EdgeInsets.fromLTRB(
+                                              50, 8, 8, 8),
+                                          child: ClipOval(
+                                            child: Container(
+                                              child: SizedBox(
+                                                  width: 180,
+                                                  height: 180,
+                                                  child:
+                                                   checkprofile(document.data()["profile pic"])
+
+                                                      // (Image.network(document.data()["profile pic"])==null)
+                                                      // ?  Image.file(
+                                                      //         _image,
+                                                      //         fit: BoxFit.fill,
+                                                      //       )
+                                                      //     : Image(
+                                                      //         image: AssetImage(
+                                                      //             "images/profile.jpg"),
+                                                      //       )
+
+                                                     
+
+                                                  //     Image.network(
+                                                  //   document
+                                                  //       .data()["profile pic"],
+                                                  //   fit: BoxFit.fill,
+                                                  // )
+                                                  // ((_image) != null)
+                                                  //     ? Image.file(
+                                                  //         _image,
+                                                  //         fit: BoxFit.fill,
+                                                  //       )
+                                                  //     : Image(
+                                                  //         image: AssetImage(
+                                                  //             "images/profile.jpg"),
+                                                  //       ),
+                                                  ),
+                                            ),
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding:
+                                              const EdgeInsets.only(top: 80),
+                                          child: IconButton(
+                                              icon: Icon(
+                                                  Icons.camera_alt_outlined),
+                                              onPressed: () async {
+                                                //pick image
+                                                _image =
+                                                    await ImagePicker.pickImage(
+                                                        source: ImageSource
+                                                            .gallery);
+                                                setState(() {
+                                                  _image = _image;
+                                                });
+                                                // // to get path
+                                                // String filename =
+                                                //     basename(_image.path);
+                                                // //set path
+                                                // var storage = FirebaseStorage
+                                                //     .instance
+                                                //     .ref()
+                                                //     .child(filename);
+                                                // // upload
+                                                // var upload =
+                                                //     storage.putFile(_image);
+                                                // // complete
+                                                // setState(() {
+                                                //   Scaffold.of(context)
+                                                //       .showSnackBar(SnackBar(
+                                                //           content: Text(
+                                                //               "pic uploaded")));
+                                                // });
+                                              }),
+                                        ),
+                                      ]),
+                                ),
                                 SizedBox(
-                                  height: 50,
+                                  height: 30,
                                 ),
                                 Container(
                                   child: Text(
@@ -164,16 +257,64 @@ class _ProfilePageState extends State<ProfilePage> {
                 },
               ),
             ),
-            SizedBox(height: 20,),
-            Container(
-              child: ElevatedButton( 
-                child: Text("Update"),
-                onPressed: ()=> _showUpdatePannel()),
-                ),
-            
+            SizedBox(
+              height: 20,
+            ),
+            Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+              Container(
+                child: ElevatedButton(
+                    child: Text("Update Info"),
+                    onPressed: () => _showUpdatePannel()),
+              ),
+              SizedBox(
+                width: 10,
+              ),
+              ElevatedButton(
+                child: Text("Update Profile Pic"),
+                onPressed: () async {
+                  // to get path
+                  String filename = basename(_image.path);
+                  //set path
+                  var storage = FirebaseStorage.instance.ref().child(filename);
+                  print(storage.toString());
+
+                  // upload
+                  var upload = await storage.putFile(_image);
+                  var url = await storage.getDownloadURL();
+                  print("The url is hellooo" + url);
+                  FirebaseFirestore.instance
+                      .collection("Employee")
+                      .doc(uid)
+                      .update({
+                    "profile pic": url,
+                  });
+
+                  var photo = FirebaseAuth.instance.currentUser.photoURL;
+                  print(photo);
+
+                  // FirebaseFirestore.instance
+                  //     .collection("Employee")
+                  //     .doc(uid)
+                  //     .update({"profile pic": upload}).then((value) {
+                  //   print("Update successful");
+                  // });
+                  // complete
+                  setState(() {
+                    Scaffold.of(context)
+                        .showSnackBar(SnackBar(content: Text("pic uploaded")));
+                  });
+                },
+              )
+            ]),
           ],
         ),
       ),
     );
   }
 }
+Widget checkprofile(String url) {
+      if (url == "") {
+        return Image(image: AssetImage("images/profile.jpg"));
+      }
+      return Image.network(url);
+    }

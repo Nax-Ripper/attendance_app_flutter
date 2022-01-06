@@ -9,6 +9,7 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+
   String role = "role";
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
@@ -53,8 +54,6 @@ class _LoginPageState extends State<LoginPage> {
         var x = hello.then((value) => checkSupervisorValidate(value));
 
         return x;
-
-        return true;
       } catch (exception) {
         print(exception);
         showError(exception.toString());
