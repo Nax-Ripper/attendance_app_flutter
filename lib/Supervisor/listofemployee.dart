@@ -461,15 +461,15 @@ class _DetailPageState extends State<DetailPage> {
                                   )
                                 ],
                               ),
-                              SizedBox(
-                                height: 10,
-                              ),
+                              
                               // getDataTable(uid),
+                              
                             ],
                           ),
                         ),
                       );
-                    }).toList(),
+                    }
+                    ).toList(),
                   ),
                 ),
               );
@@ -566,3 +566,4 @@ Widget getTrailing(String checkin) {
 //     return Text("No data found");
 //   }
 // }
+
