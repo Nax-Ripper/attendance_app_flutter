@@ -19,8 +19,6 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-    
-
     void _showUpdatePannel() {
       showModalBottomSheet(
           context: context,
@@ -77,20 +75,18 @@ class _ProfilePageState extends State<ProfilePage> {
                                               child: SizedBox(
                                                   width: 180,
                                                   height: 180,
-                                                  child:
-                                                   checkprofile(document.data()["profile pic"])
+                                                  child: checkprofile(document
+                                                      .data()["profile pic"])
 
-                                                      // (Image.network(document.data()["profile pic"])==null)
-                                                      // ?  Image.file(
-                                                      //         _image,
-                                                      //         fit: BoxFit.fill,
-                                                      //       )
-                                                      //     : Image(
-                                                      //         image: AssetImage(
-                                                      //             "images/profile.jpg"),
-                                                      //       )
-
-                                                     
+                                                  // (Image.network(document.data()["profile pic"])==null)
+                                                  // ?  Image.file(
+                                                  //         _image,
+                                                  //         fit: BoxFit.fill,
+                                                  //       )
+                                                  //     : Image(
+                                                  //         image: AssetImage(
+                                                  //             "images/profile.jpg"),
+                                                  //       )
 
                                                   //     Image.network(
                                                   //   document
@@ -125,6 +121,42 @@ class _ProfilePageState extends State<ProfilePage> {
                                                 setState(() {
                                                   _image = _image;
                                                 });
+
+                                                String filename =
+                                                    basename(_image.path);
+                                                //set path
+                                                var storage = FirebaseStorage
+                                                    .instance
+                                                    .ref()
+                                                    .child(filename);
+                                                print(storage.toString());
+
+                                                // upload
+                                                var upload = await storage
+                                                    .putFile(_image);
+                                                var url = await storage
+                                                    .getDownloadURL();
+                                                print(
+                                                    "The url is hellooo" + url);
+                                                FirebaseFirestore.instance
+                                                    .collection("Employee")
+                                                    .doc(uid)
+                                                    .update({
+                                                  "profile pic": url,
+                                                });
+                                                var photo = FirebaseAuth
+                                                    .instance
+                                                    .currentUser
+                                                    .photoURL;
+                                                print(photo);
+                                                // complete
+                                                setState(() {
+                                                  Scaffold.of(context)
+                                                      .showSnackBar(SnackBar(
+                                                          content: Text(
+                                                              "pic uploaded")));
+                                                });
+
                                                 // // to get path
                                                 // String filename =
                                                 //     basename(_image.path);
@@ -266,45 +298,45 @@ class _ProfilePageState extends State<ProfilePage> {
                     child: Text("Update Info"),
                     onPressed: () => _showUpdatePannel()),
               ),
-              SizedBox(
-                width: 10,
-              ),
-              ElevatedButton(
-                child: Text("Update Profile Pic"),
-                onPressed: () async {
-                  // to get path
-                  String filename = basename(_image.path);
-                  //set path
-                  var storage = FirebaseStorage.instance.ref().child(filename);
-                  print(storage.toString());
+              // SizedBox(
+              //   width: 10,
+              // ),
+              // ElevatedButton(
+              //   child: Text("Update Profile Pic"),
+              //   onPressed: () async {
+              //     // to get path
+              //     // String filename = basename(_image.path);
+              //     // //set path
+              //     // var storage = FirebaseStorage.instance.ref().child(filename);
+              //     // print(storage.toString());
 
-                  // upload
-                  var upload = await storage.putFile(_image);
-                  var url = await storage.getDownloadURL();
-                  print("The url is hellooo" + url);
-                  FirebaseFirestore.instance
-                      .collection("Employee")
-                      .doc(uid)
-                      .update({
-                    "profile pic": url,
-                  });
+              //     // // upload
+              //     // var upload = await storage.putFile(_image);
+              //     // var url = await storage.getDownloadURL();
+              //     // print("The url is hellooo" + url);
+              //     // FirebaseFirestore.instance
+              //     //     .collection("Employee")
+              //     //     .doc(uid)
+              //     //     .update({
+              //     //   "profile pic": url,
+              //     // });
 
-                  var photo = FirebaseAuth.instance.currentUser.photoURL;
-                  print(photo);
+              //     // var photo = FirebaseAuth.instance.currentUser.photoURL;
+              //     // print(photo);
 
-                  // FirebaseFirestore.instance
-                  //     .collection("Employee")
-                  //     .doc(uid)
-                  //     .update({"profile pic": upload}).then((value) {
-                  //   print("Update successful");
-                  // });
-                  // complete
-                  setState(() {
-                    Scaffold.of(context)
-                        .showSnackBar(SnackBar(content: Text("pic uploaded")));
-                  });
-                },
-              )
+              //     // // FirebaseFirestore.instance
+              //     // //     .collection("Employee")
+              //     // //     .doc(uid)
+              //     // //     .update({"profile pic": upload}).then((value) {
+              //     // //   print("Update successful");
+              //     // // });
+              //     // // complete
+              //     // setState(() {
+              //     //   Scaffold.of(context)
+              //     //       .showSnackBar(SnackBar(content: Text("pic uploaded")));
+              //     // });
+              //   },
+              // )
             ]),
           ],
         ),
@@ -312,9 +344,10 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 }
+
 Widget checkprofile(String url) {
-      if (url == "") {
-        return Image(image: AssetImage("images/profile.jpg"));
-      }
-      return Image.network(url);
-    }
+  if (url == "") {
+    return Image(image: AssetImage("images/profile.jpg"));
+  }
+  return Image.network(url);
+}

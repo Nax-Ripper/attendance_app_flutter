@@ -5,7 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:local_auth/local_auth.dart';
+import 'package:spring1_ui/Employee/profilepage.dart';
 
 import '../Employee/attendance.dart';
 import '../FirestoreOperstions.dart';
@@ -191,9 +191,9 @@ class _AttendanceState extends State<Attendance> {
                                     try {
                                       snap2.delete();
                                       setState(() {
-                                        Scaffold.of(context).showSnackBar(
-                                            SnackBar(
-                                                content: Text("User Deleted Successfully")));
+                                        Scaffold.of(context).showSnackBar(SnackBar(
+                                            content: Text(
+                                                "User Deleted Successfully")));
                                       });
                                     } catch (e) {}
                                   } else {
@@ -206,11 +206,6 @@ class _AttendanceState extends State<Attendance> {
                             setState(() {
                               collection = "Employee";
                             });
-
-                            // print("hello");
-                            // var hello = snap.get().then((value) {
-                            //   print(value.data()["tempass"]);
-                            // });
                           },
                           backgroundColor: Color(0xFFFE4A49),
                           foregroundColor: Colors.white,
@@ -221,8 +216,17 @@ class _AttendanceState extends State<Attendance> {
                   child: Card(
                     elevation: 8,
                     child: ListTile(
-                      title: Text(list[i]["Fullname"]),
+                      title: Text(
+                        list[i]["Fullname"],
+                        style: TextStyle(fontSize: 20),
+                      ),
                       subtitle: Text(list[i]["phone"]),
+                      trailing: getTrailing(list[i]["check in"].toString()),
+                      leading: SizedBox(
+                        height: 110.0,
+                        width: 110.0, // fixed width and height
+                        child: checkprofile(list[i]["profile pic"]),
+                      ),
                       onTap: () => goToDetailPage(list[i]),
                     ),
                   ),
@@ -280,11 +284,11 @@ class _DetailPageState extends State<DetailPage> {
     print(difference.inHours);
 
     if (!difference.isNegative) {
-      var diff = difference.inSeconds
+      var diff = difference.inMinutes
           .toString(); // for now set as seconds(demo purpose)
       print(diff);
       var hours = double.parse(diff);
-      Total = hours * 10;
+      Total = hours * 0.02;
       print(Total);
       return Total;
     }
@@ -456,7 +460,11 @@ class _DetailPageState extends State<DetailPage> {
                                                 Colors.red)),
                                   )
                                 ],
-                              )
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              // getDataTable(uid),
                             ],
                           ),
                         ),
@@ -488,6 +496,11 @@ Widget formaDtate2(String time) {
             color: Color.fromARGB(255, 32, 224, 38),
             fontWeight: FontWeight.bold),
       );
+    } else if (date != today.substring(0, 10)) {
+      return Text(
+        "No record",
+        textAlign: TextAlign.center,
+      );
     } else {
       return Text(
         date + " At " + hours,
@@ -502,3 +515,54 @@ Widget formaDtate2(String time) {
     );
   }
 }
+
+Widget getTrailing(String checkin) {
+  var today = DateTime.now().toString();
+  if (checkin == "today") {
+    return Icon(
+      Icons.cancel_rounded,
+      color: Colors.red,
+      size: 30,
+    );
+  } else if (checkin.substring(0, 10) == today.substring(0, 10)) {
+    return Icon(
+      Icons.check_circle,
+      color: Colors.greenAccent[700],
+      size: 30,
+    );
+  }
+  return Icon(
+    Icons.cancel_rounded,
+    color: Colors.red,
+    size: 30,
+  );
+}
+
+// Widget getDataTable(uid) {
+//   var ref1 = FirebaseFirestore.instance
+//       .collection("Employee")
+//       .doc(uid)
+//       .collection("History");
+  
+
+//   if (ref1 != null) {
+//     return Container(
+//       child: DataTable(
+//         columns: [
+//           DataColumn(label: Text("Check In")),
+//           DataColumn(label: Text("Check Out")),
+//           DataColumn(label: Text("Amount"))
+//         ],
+//          rows: [
+//            DataRow(cells: [
+//              DataCell(Text("Hello")),
+//              DataCell(Text("Hello")),
+//              DataCell(Text("Hello")),
+
+//            ])
+//          ]),
+//     );
+//   } else {
+//     return Text("No data found");
+//   }
+// }
