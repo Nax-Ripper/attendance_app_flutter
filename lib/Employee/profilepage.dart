@@ -116,10 +116,14 @@ class _ProfilePageState extends State<ProfilePage> {
                                                   Icons.camera_alt_outlined),
                                               onPressed: () async {
                                                 //pick image
-                                                _image =
-                                                    await ImagePicker.pickImage(
-                                                        source: ImageSource
-                                                            .gallery);
+                                                // _image =
+                                                //     await ImagePicker.pickImage(
+                                                //         source: ImageSource
+                                                //             .gallery);
+                                                
+                                                ImagePicker pick =
+                                                    ImagePicker();
+                                                    _image = (await pick.getImage(source: ImageSource.gallery)) as File;
                                                 setState(() {
                                                   _image = _image;
                                                 });
@@ -177,7 +181,9 @@ class _ProfilePageState extends State<ProfilePage> {
                                                 //           content: Text(
                                                 //               "pic uploaded")));
                                                 // });
-                                              }),
+                                              }
+                                              
+                                              ),
                                         ),
                                       ]),
                                 ),

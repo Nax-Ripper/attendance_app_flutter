@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:spring1_ui/Employee/profilepage.dart';
+import 'package:spring1_ui/Supervisor/getEmployeeData.dart';
 
 import '../Employee/attendance.dart';
 import '../FirestoreOperstions.dart';
@@ -383,11 +384,9 @@ class _DetailPageState extends State<DetailPage> {
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
                               SizedBox(
-                                height: 105,
+                                height: 50,
                               ),
-                              SizedBox(
-                                height: 20,
-                              ),
+
                               Text(
                                 "Full Name : ${document.data()["Fullname"].toString().toUpperCase()}",
                                 style: TextStyle(fontSize: 20),
@@ -461,15 +460,50 @@ class _DetailPageState extends State<DetailPage> {
                                   )
                                 ],
                               ),
-                              
+                              SizedBox(
+                                height: 20,
+                              ),
+                              Container(
+                                padding: const EdgeInsets.all(8.0),
+                                decoration: BoxDecoration(
+                                    border: Border(
+                                        bottom: BorderSide(
+                                            width: 2,
+                                            color: Color.fromARGB(
+                                                255, 47, 170, 16)))),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    Text(
+                                      "Date(yy-mm-dd)",
+                                      style: TextStyle(fontSize: 15),
+                                    ),
+                                    Text(
+                                      "Check In",
+                                      style: TextStyle(fontSize: 15),
+                                    ),
+                                    Text(
+                                      "Check Out",
+                                      style: TextStyle(fontSize: 15),
+                                    ),
+                                    Text(
+                                      "Amount",
+                                      style: TextStyle(fontSize: 15),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              SizedBox(
+                                height: 20,
+                              ),
                               // getDataTable(uid),
-                              
+                              GetEmployeeData(uid)
                             ],
                           ),
                         ),
                       );
-                    }
-                    ).toList(),
+                    }).toList(),
                   ),
                 ),
               );
