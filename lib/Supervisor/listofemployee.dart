@@ -4,12 +4,17 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:spring1_ui/Employee/profilepage.dart';
 import 'package:spring1_ui/Supervisor/getEmployeeData.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../Employee/attendance.dart';
 import '../FirestoreOperstions.dart';
+import 'excel_operation.dart';
 import 'login.dart';
 // package:spring1_uSupervisor/login.dart
 import 'package:spring1_ui/Supervisor/login.dart';
@@ -37,7 +42,7 @@ class _AttendanceState extends State<Attendance> {
 
   Future getDialog(BuildContext context) {
     TextEditingController mycontroller = TextEditingController();
-    var cansee = Icon(Icons.remove_red_eye);
+    // var cansee = Icon(Icons.remove_red_eye);
     // bool _canSee = false;
     return showDialog(
         context: context,
@@ -65,10 +70,8 @@ class _AttendanceState extends State<Attendance> {
 
   checkpassword(real, enterd) {
     if (real != enterd) {
-      print("Failed nooooooooooooooooooooooobbbbbbbbbbbbb");
       return false;
     } else {
-      print("Passsssss Nooooooooooooooooob");
       return true;
     }
   }
@@ -150,75 +153,84 @@ class _AttendanceState extends State<Attendance> {
               itemBuilder: (context, i) {
                 return Slidable(
                   key: const ValueKey(0),
-                  endActionPane: ActionPane(motion: ScrollMotion(),
-                      // dismissible: DismissiblePane(onDismissed: () {
-                      //   list[i].get("email");
+                  startActionPane:
+                      ActionPane(motion: StretchMotion(), children: [
+                    SlidableAction(
+                      onPressed: (context) {
+                        openWhatsapp(list[i].data()["phone"]);
+                      },
+                      backgroundColor: Colors.green,
+                      foregroundColor: Colors.white,
+                      icon: FontAwesomeIcons.whatsapp,
+                      label: "WhatsApp",
+                    ),
+                    SlidableAction(
+                      onPressed: (context) {
+                        callMe(list[i].data()["phone"]);
+                      },
+                      backgroundColor: Colors.blue,
+                      foregroundColor: Colors.white,
+                      icon: FontAwesomeIcons.phoneAlt,
+                      label: "Phone",
+                    )
+                  ]),
+                  endActionPane: ActionPane(motion: StretchMotion(), children: [
+                    SlidableAction(
+                      onPressed: (context) {
+                        var snap = FirebaseFirestore.instance
+                            .collection("Supervisor")
+                            .doc(FirebaseAuth.instance.currentUser.uid);
 
-                      //   setState(() {
-                      //     collection = "Employee";
-                      //   });
-                      // }),
-                      children: [
-                        SlidableAction(
-                          onPressed: (context) {
-                            var snap = FirebaseFirestore.instance
-                                .collection("Supervisor")
-                                .doc(FirebaseAuth.instance.currentUser.uid);
-                            var snap2 = FirebaseFirestore.instance
-                                .collection("Employee")
-                                .doc(list[i].data()["uid"]);
+                        var snap2 = FirebaseFirestore.instance
+                            .collection("Employee")
+                            .doc(list[i].data()["uid"]);
+                        var snap3 = FirebaseFirestore.instance
+                            .collection("Employee")
+                            .doc(list[i].get("uid"))
+                            .collection("History");
 
-                            // Future<bool> isApproved = getAuthorised();
-                            // if (isApproved == true) {
-                            //   print("approved");
-                            // } else {
-                            //   print("Failed");
-                            // }
-                            getDialog(context).then((password) {
-                              snap.get().then((value) {
-                                // print("Hello theis is tempass " +
-                                //     tempass.toString());
-                                // print("Hello this is entered password " +
-                                //     password.toString());
-                                var tempass = value.data()["tempass"];
+                        getDialog(context).then((password) {
+                          snap.get().then((value) {
+                            var tempass = value.data()["tempass"];
 
-                                if (tempass == null) {
-                                  showError("You are not allowed to delete");
-                                } else {
-                                  bool flag = checkpassword(
-                                      tempass.toString(), password.toString());
+                            if (tempass == null) {
+                              showError("You are not allowed to delete");
+                            } else {
+                              bool flag = checkpassword(
+                                  tempass.toString(), password.toString());
 
-                                  if (flag) {
-                                    try {
-                                      snap2.delete();
-                                      setState(() {
-                                        Scaffold.of(context).showSnackBar(SnackBar(
-                                            content: Text(
-                                                "User Deleted Successfully")));
-                                      });
-                                    } catch (e) {}
-                                  } else {
-                                    showError("Operation Failed");
-                                  }
-                                }
-                              });
-                            });
+                              if (flag) {
+                                try {
+                                  snap2.delete();
+                                  snap3.doc().delete();
+                                  // setState(() {
+                                  //   Scaffold.of(context).showSnackBar(SnackBar(
+                                  //       content: Text(
+                                  //           "User Deleted Successfully")));
+                                  // });
+                                } catch (e) {}
+                              } else {
+                                showError("Operation Failed");
+                              }
+                            }
+                          });
+                        });
 
-                            setState(() {
-                              collection = "Employee";
-                            });
-                          },
-                          backgroundColor: Color(0xFFFE4A49),
-                          foregroundColor: Colors.white,
-                          icon: Icons.delete,
-                          label: 'Delete',
-                        )
-                      ]),
+                        setState(() {
+                          collection = "Employee";
+                        });
+                      },
+                      backgroundColor: Color(0xFFFE4A49),
+                      foregroundColor: Colors.white,
+                      icon: FontAwesomeIcons.trash,
+                      label: 'Delete',
+                    )
+                  ]),
                   child: Card(
                     elevation: 8,
                     child: ListTile(
                       title: Text(
-                        list[i]["Fullname"],
+                        list[i]["Fullname"].toString().toUpperCase(),
                         style: TextStyle(fontSize: 20),
                       ),
                       subtitle: Text(list[i]["phone"]),
@@ -290,8 +302,11 @@ class _DetailPageState extends State<DetailPage> {
       print(diff);
       var hours = double.parse(diff);
       Total = hours * 0.02;
+      var Ftotal = Total.toStringAsFixed(2);
+      var toDouble = double.parse(Ftotal);
       print(Total);
-      return Total;
+      print(Ftotal);
+      return toDouble;
     }
   }
 
@@ -353,6 +368,46 @@ class _DetailPageState extends State<DetailPage> {
     }
 
     return Scaffold(
+      floatingActionButton: SpeedDial(
+        animatedIcon: AnimatedIcons.menu_close,
+        activeBackgroundColor: Colors.red,
+        backgroundColor: Colors.purple[900],
+        children: [
+          SpeedDialChild(
+            child: Icon(FontAwesomeIcons.fileExcel),
+            backgroundColor: Colors.green[500],
+            elevation: 20,
+            label: "Excel Sheet",
+            labelStyle: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+            labelBackgroundColor: Colors.yellowAccent,
+            onTap: () => getExcel(
+                widget.selectedUser.get("Fullname"),
+                widget.selectedUser.get("address"),
+                widget.selectedUser.get("phone"),
+                uid,
+                widget.selectedUser.get("Total Amount").toString()),
+          ),
+          SpeedDialChild(
+              child: Icon(FontAwesomeIcons.phoneAlt),
+              backgroundColor: Colors.blue[500],
+              elevation: 20,
+              label:
+                  "Call ${widget.selectedUser.get("Fullname").toString().toUpperCase()}",
+              labelStyle: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+              labelBackgroundColor: Colors.yellowAccent,
+              onTap: () => callMe(widget.selectedUser.get("phone"))),
+          SpeedDialChild(
+            child: Icon(FontAwesomeIcons.whatsapp),
+            backgroundColor: Colors.green,
+            elevation: 20,
+            label:
+                "WhatsApp ${widget.selectedUser.get("Fullname").toString().toUpperCase()}",
+            labelStyle: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+            labelBackgroundColor: Colors.yellowAccent,
+            onTap: () => openWhatsapp(widget.selectedUser.get("phone")),
+          ),
+        ],
+      ),
       appBar: AppBar(
         title: Text(
             "Record of ${widget.selectedUser.data()["Fullname"].toString().toUpperCase()}"),
@@ -498,7 +553,7 @@ class _DetailPageState extends State<DetailPage> {
                                 height: 20,
                               ),
                               // getDataTable(uid),
-                              GetEmployeeData(uid)
+                              GetEmployeeData(uid),
                             ],
                           ),
                         ),
@@ -572,32 +627,16 @@ Widget getTrailing(String checkin) {
   );
 }
 
-// Widget getDataTable(uid) {
-//   var ref1 = FirebaseFirestore.instance
-//       .collection("Employee")
-//       .doc(uid)
-//       .collection("History");
-  
+void openWhatsapp(String phone) async {
+  String phoneNum = "01110948155";
+  phoneNum = phone;
+  var url = "https://wa.me/$phoneNum?text=Hello";
+  await launch(url);
+}
 
-//   if (ref1 != null) {
-//     return Container(
-//       child: DataTable(
-//         columns: [
-//           DataColumn(label: Text("Check In")),
-//           DataColumn(label: Text("Check Out")),
-//           DataColumn(label: Text("Amount"))
-//         ],
-//          rows: [
-//            DataRow(cells: [
-//              DataCell(Text("Hello")),
-//              DataCell(Text("Hello")),
-//              DataCell(Text("Hello")),
-
-//            ])
-//          ]),
-//     );
-//   } else {
-//     return Text("No data found");
-//   }
-// }
-
+void callMe(String phone) async {
+  String phoneNum = "01110948155";
+  phoneNum = phone;
+  // await FlutterPhoneDirectCaller.callNumber(phoneNum);
+  await launch("tel:/$phoneNum");
+}

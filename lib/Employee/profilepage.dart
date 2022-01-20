@@ -4,7 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
+// import 'package:image_picker/image_picker.dart';
 import 'package:spring1_ui/Employee/updateUserProfile.dart';
 import 'package:path/path.dart';
 
@@ -18,6 +18,7 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePageState extends State<ProfilePage> {
   String uid = FirebaseAuth.instance.currentUser.uid;
   late File _image;
+  // final picker = ImagePicker();
 
   @override
   Widget build(BuildContext context) {
@@ -115,18 +116,31 @@ class _ProfilePageState extends State<ProfilePage> {
                                               icon: Icon(
                                                   Icons.camera_alt_outlined),
                                               onPressed: () async {
+                                                // final PickedFile =
+                                                //     await picker.getImage(
+                                                //         source: ImageSource
+                                                //             .gallery);
+
+                                                // setState(() {
+                                                //   if (PickedFile != null) {
+                                                //     _image =
+                                                //         File(PickedFile.path);
+                                                //   } else {
+                                                //     print("No image selected");
+                                                //   }
+                                                // });
                                                 //pick image
                                                 // _image =
                                                 //     await ImagePicker.pickImage(
                                                 //         source: ImageSource
                                                 //             .gallery);
-                                                
-                                                ImagePicker pick =
-                                                    ImagePicker();
-                                                    _image = (await pick.getImage(source: ImageSource.gallery)) as File;
-                                                setState(() {
-                                                  _image = _image;
-                                                });
+
+                                                // ImagePicker pick =
+                                                //     ImagePicker();
+                                                //     _image = (await pick.getImage(source: ImageSource.gallery)) as File;
+                                                // setState(() {
+                                                //   _image = _image;
+                                                // });
 
                                                 String filename =
                                                     basename(_image.path);
@@ -181,9 +195,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                                 //           content: Text(
                                                 //               "pic uploaded")));
                                                 // });
-                                              }
-                                              
-                                              ),
+                                              }),
                                         ),
                                       ]),
                                 ),

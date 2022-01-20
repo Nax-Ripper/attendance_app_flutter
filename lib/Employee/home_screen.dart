@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/material.dart';
 import 'package:spring1_ui/Employee/profilepage.dart';
 import '../main.dart';
-import 'package:image_picker/image_picker.dart';
+// import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart';
 
 class HomeScreen extends StatefulWidget {
