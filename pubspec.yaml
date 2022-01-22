@@ -49,6 +49,7 @@ dependencies:
   path_provider: ^2.0.8
   flutter_speed_dial: ^5.0.0+1
   open_file: ^3.2.1
+  table_calendar: ^2.3.3
   # image_picker: ^0.6.7+22
 
 
